@@ -1,0 +1,9 @@
+---
+- name: Upgrade Gridcoin Wallet (Windows) 
+  hosts: gridcoin-windows
+  ansible_ssh_port: 5986
+  ansible_connection: winrm
+
+  tasks:
+    - name: 'Upgrade Wallet'
+      raw: '{{ grcdir }}\GRCRestarter.exe upgrade'

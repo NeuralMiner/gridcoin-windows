@@ -1,0 +1,2 @@
+[gridcoin-windows]
+hostname grcdatadir='C:\Users\User\AppData\Roaming\GridcoinResearch\' grcdir='C:\GridcoinResearch\'
