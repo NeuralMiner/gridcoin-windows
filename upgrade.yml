@@ -1,9 +1,26 @@
 ---
 - name: Upgrade Gridcoin Wallet (Windows) 
   hosts: gridcoin-windows
-  ansible_ssh_port: 5986
-  ansible_connection: winrm
+  vars_files:
+    - vars/winrm.yml
+    - vars/vars.yml
+    - vars/wincreds.yml
 
   tasks:
     - name: 'Upgrade Wallet'
       raw: '{{ grcdir }}\GRCRestarter.exe upgrade'
+
+    - name: 'Start Gridcoin Prod.'
+      raw: '{{ ansibledir }}\PsExec.exe -i -d -u "{{ winuser }}" -p "{{ winpass }}" \\{{ item }} "{{ grcdir }}\gridcoinresearch.exe"'
+      with_items:
+       - "{{ hostname }}"
+      ignore_errors: yes
+
+    - name: 'Create testnet.bat'
+      win_template: src='templates/testnet.j2' dest='{{ grcdir }}\testnet.bat'
+
+    - name: 'Start Gridcoin testnet.'
+      raw: '{{ ansibledir }}\PsExec.exe -i -d -u "{{ winuser }}" -p "{{ winpass }}" \\{{ item }} "{{ grcdir }}\testnet.bat"'
+      with_items:
+       - "{{ hostname }}"
+      ignore_errors: yes
